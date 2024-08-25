@@ -1,0 +1,32 @@
+{% if vendors %}
+    {% csrf_token %}
+    <div class="stock">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                
+                    <th>CompanyName</th>
+                    <th>Name</th>
+                    <th>Cell</th>
+                    <th>Email</th>
+                    <th>Billing</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vendor in vendors %}
+                <tr>
+                    
+                    <td>{{ vendor.companyname}}</td>
+                    <td>{{ vendor.name }}</td>
+                    <td>{{ vendor.phone_number }}</td>
+                    <td>{{ vendor.email }}</td>
+                    <td><a href="{% url 'Purchasef' vendor.pk  %}">CREATE ORDER</a></td>
+                    
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <p></p>
+{% endif %}

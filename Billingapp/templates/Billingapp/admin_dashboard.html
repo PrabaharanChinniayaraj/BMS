@@ -1,0 +1,17 @@
+
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<h1>Admin</h1>
+<ul>
+<li><a href="{% url 'user_register'  %}">register user</a></li>
+<br>
+<li><a href="{% url 'register'  %}">register Customer</a></li>
+
+<li><a href="{% url 'Vendor_register'  %}">register Vendor</a></li>
+
+</ul>
+
+{% endblock content %}
+

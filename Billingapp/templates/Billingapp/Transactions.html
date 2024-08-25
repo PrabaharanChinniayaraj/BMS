@@ -1,0 +1,328 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+    
+    
+
+
+
+    
+
+    {% if request.path == '/Transactions' %}
+    <div class="customer1">
+
+        <form method="get" class="form-inline mb-3">
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="start_date" class="sr-only">Start Date</label>
+                <input type="date" class="form-control" id="start_date" name="start_date" value="{{ start_date|date:'Y-m-d' }}">
+            </div>
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="end_date" class="sr-only">End Date</label>
+                <input type="date" class="form-control" id="end_date" name="end_date" value="{{ end_date|date:'Y-m-d' }}">
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Filter</button>
+        </form>
+    </div>
+    
+        {% if Transacttions %}
+            {% csrf_token %}
+        
+            <div class="stock">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>SNO</th>
+                            <th>Transcode</th>
+                            <th>Name</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for Transacttion in Transacttions %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td> 
+                                <td>{{ Transacttion.transcode }}</td>
+                                <td>{{ Transacttion.customer }}</td>
+                                <td>{{ Transacttion.product}}</td>
+                                <td>{{ Transacttion.quantity }}</td>
+                                <td>{{ Transacttion.timestamp|date:"d/m/Y" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+         
+        {% else %}
+            <p>No Transactions found.</p>
+        {% endif %}
+    {% elif request.path == '/Buysummary' %}
+        {% if TranSummeries %}
+            {% csrf_token %}
+            <h4 style="color:blue;">Buying Transactions Summary</h4>
+            <div class="stock">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>SNO</th>
+                            <th>Transcode</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for summary in TranSummeries %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td> 
+                            
+                                {% if summary.transcode %}
+                                    <td><a href="{% url 'Buying' summary.transcode %}">{{summary.transcode}}</a></td>
+                                {% else %}
+                                    <td>No transcode available</td>
+                                {% endif %}
+                                <td>{{ summary.total_quantity }}</td>
+                               
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+
+        {% else %}
+            <p>No Transactions found.</p>
+        {% endif %}
+    {% elif request.path == '/Salesummary' %}
+        {% if TranSummeries %}
+            {% csrf_token %}
+            <h4 style="color:blue;">Sale Transactions Summary</h4>
+            <div class="stock">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>SNO</th>
+                            <th>Transcode</th>
+                            <th>Quantity</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for summary in TranSummeries %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td> 
+                            
+                                {% if summary.transcode %}
+                                    <td><a href="{% url 'Detailing' summary.transcode %}">{{summary.transcode}}</a></td>
+                                {% else %}
+                                    <td>No transcode available</td>
+                                {% endif %}
+                                <td>{{ summary.total_quantity }}</td>
+                                
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>No Transactions found.</p>
+        {% endif %}
+  
+    {% elif '/Detailing/' in request.path %}
+        {% if Details %}
+            {% csrf_token %}
+            <h4 style="color:rgb(20, 40, 218)"> Sale Transaction Detail</h1>
+        <div class="stock">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>SNO</th>
+                        <th>Transcode</th>
+                        <th>Transaction-ID</th>
+                        <th>Name</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Profit</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for Transacttion in Details %}
+                        <tr> 
+                            <td>{{ forloop.counter }}</td> 
+                            <td>{{ Transacttion.transcode }}</td>
+                            <td>{{ Transacttion.transaction_id}}</td>
+                            <td>{{ Transacttion.customer}}</td>
+                            <td>{{ Transacttion.product}}</td>
+                            <td>{{ Transacttion.quantity }}</td>
+                            <td>{{ Transacttion.profit}}</td>
+                            <td>{{ Transacttion.timestamp|date:"d/m/Y" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+            <p>No Details found.</p>
+        {% endif %}
+   
+    {% elif '/Buying/' in request.path %}
+        {% if Details %}
+            {% csrf_token %}
+
+        <div class="stock">
+          
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>SNO</th>
+                        <th>Transcode</th>
+                        <th>Name</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for Transacttion in Details %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td> 
+                            <td>{{ Transacttion.transcode }}</td>
+                            <td>{{ Transacttion.vendor }}</td>
+                            <td>{{ Transacttion.product}}</td>
+                            <td>{{ Transacttion.quantity }}</td>
+                            <td>{{ Transacttion.timestamp|date:"d/m/Y" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+            <p>No Details found.</p>
+        {% endif %}
+
+
+    
+
+    {% elif request.path == '/Sellingqty/'%}
+
+    <h4 style="color:blue;">Product Sales Volume</h4>
+    <div class="customer1">
+        <form method="get" class="form-inline mb-3">
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="product_name" class="sr-only">Product Name</label>
+                <select class="form-control" id="product_name" name="product_name">
+                    <option value="">Select Product</option>
+                    {% for product in product_names %}
+                        <option value="{{ product.product__name }}">{{ product.product__name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary mb-2 ml-3">Filter</button>
+            <a href="{% url 'Sellingqty' %}" class="btn btn-secondary mb-2 ml-4">Reset</a>
+            </form>
+        </form>
+    </div>
+  
+
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="stock">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Total Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in product_names %}
+                        <tr>
+                            <td>{{ item.product__name }}</td>
+                            <td>{{ item.total_quantity }}</td>
+                        </tr>
+                        {% endfor %}
+   
+                            {% if product_name and total_quantity %}
+                            <tr>
+                                <td>{{ product_name }}</td>
+                                <td>{{ total_quantity }}</td>
+                            </tr>
+                            {% endif %}
+                        
+                        </tbody>
+                </table>
+            </div>
+        </div>
+  
+        <div class="col-md-6">
+            <div class="chart1">
+                
+                <canvas id="productChart"></canvas>
+            </div>
+        </div>
+    </div>
+   
+   
+    <!-- Include Chart.js from a CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var ctx = document.getElementById('productChart').getContext('2d');
+            var productNames = JSON.parse('{{ product_names1|escapejs }}');
+            var quantities = JSON.parse('{{ quantities|escapejs }}');
+            var chart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: productNames,
+                    datasets: [{
+                        label: 'Total Quantity',
+                        data: quantities,
+                        backgroundColor: [
+                            'rgba(255, 99, 132)',
+                            'rgba(54, 162, 235)',
+                            'rgba(255, 206, 86)',
+                            'rgba(75, 192, 192)',
+                            'rgba(153, 102, 255)',
+                            'rgba(255, 159, 64)',
+                            'rgba(199, 199, 199)',
+                            'rgba(83, 102, 255, 0.2)',
+                            'rgba(102, 204, 255, 0.2)',
+                            'rgba(255, 99, 71, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(199, 199, 199, 1)',
+                            'rgba(83, 102, 255, 1)',
+                            'rgba(102, 204, 255, 1)',
+                            'rgba(255, 99, 71, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+        
+    {% endif %}
+{% endblock %}

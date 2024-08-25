@@ -1,0 +1,262 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+    <style>
+        .progress-container {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .progress-bar {
+            height: 20px;
+            background-color: #4caf50;
+            border-radius: 5px;
+            text-align: center;
+            color: white;
+            line-height: 20px; /* Align text vertically */
+        }
+        .cardbox
+        {
+            position:relative;
+            width:100%;
+            padding:20px;
+            display:grid;
+            grid-template-columns: repeat(3,1fr);
+            grid-gap:20px;
+        
+        }
+        .cardbox1
+        {
+            position:relative;
+            width:100%;
+            padding:20px;
+            display:grid;
+            grid-template-columns: repeat(2fr,1fr);
+            grid-gap:20px;
+        
+        }
+        .cardbox1 .stock
+        {
+            position:relative;
+            background: #fff;
+            padding:20px;
+            display:flex;
+            justify-content: space-between;
+            cursor:pointer;
+            border-radius: px;
+        }
+        .cardbox .card .numbers
+        {
+            position: relative;
+            font-size: 2em;
+            font-weight: 500;
+        }
+        .cardbox .card .cardname
+        {
+           
+            color: #999;
+        }
+        .cardbox .card .iconbox
+        {
+            font-size: 2.5em;
+            color:#03a9f4;
+        }
+        .card1 {
+            width:500px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .numbers {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .cardname {
+            font-size: 1.2em;
+            color: #555;
+        }
+        .iconbox {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .fa-calendar-day {
+            font-size: 2em;
+            color: #777;
+        }
+        .sec h2
+        {
+            color: #8bdf16;
+            align-items: center;
+            justify-content: center;
+            margin-left: 200px;
+        }
+       
+    </style>
+
+
+<div class="sec">
+    
+    <div class="cardbox">
+        
+        <div class="card">
+            <div>
+                {% for week in weekly_profits %}
+                    <div class="numbers">₹{{ week.total_profit }}</div>
+                    <div class="cardname">{{ week.week_name }}: Profit</div>
+                {% endfor %}
+            </div>
+            <div class="iconbox">
+                <i class="fa fa-calendar-week card-icon"></i>
+            </div>
+        </div>
+      
+        <div class="card">
+            <div>
+            {% for month in monthly_profits %}
+                <div class="numbers">₹{{month.total_profit }}</div>
+                <div class="cardname">{{ month.month|date:"F Y" }}: Profit</div>
+            {% endfor %}
+            </div>
+            <div class="iconbox">
+                <i class="fa  fa-calendar-alt card-icon"></i>
+            </div>
+        </div>
+        <div class="card">
+            <div>
+                <div class="numbers">₹{{today_profit.total_profit}}</div>
+                <div class="cardname">{{today}}</div>
+            </div>
+            <div class="iconbox">
+                <i class="fa fa-money"></i>
+            </div>
+        </div>
+    </div>
+
+    
+
+
+    
+    <div class="cardbox1">   
+        
+        <div class="stock">
+            <table class="table table-striped">
+                <tr>
+                    <th>DAY</th>
+                    <th>AMOUNT</th>
+                    
+                </tr>
+                {% for day in daily_profits %}
+                <tr>
+                    <td>{{ day.day|date:"l" }}</td>
+                    
+                    <td>
+                        <!-- Progress bar -->
+                        <div class="progress-container">
+                            <div class="progress-bar"
+                                style="width: calc({{ day.total_profit }} / {{ max_profit }} * 100%);
+                                        background-color: 
+                                        {% if day.day|date:"w" == '0' %}#FF5733
+                                        {% elif day.day|date:"w" == '1' %}#33FF57
+                                        {% elif day.day|date:"w" == '2' %}#3357FF
+                                        {% elif day.day|date:"w" == '3' %}#FF33A6
+                                        {% elif day.day|date:"w" == '4' %}#FF8C33
+                                        {% elif day.day|date:"w" == '5' %}#8C33FF
+                                        {% elif day.day|date:"w" == '6' %}#33FFF6
+                                        {% endif %};">
+                                ₹{{ day.total_profit }}
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        
+        
+        <div class="stock">
+            <table class="table table-striped">
+                <tr>
+                    <th>Product Name</th>
+                    <th>Category</th>
+                    <th>Total Profit</th>
+                </tr>
+                {% for product in product_profits %}
+                <tr>
+                    <td>{{ product.product__name }}</td>
+                    <td>{{ product.product__category }}</td>
+                    <td>{{ product.total_profit }}</td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="2" style="text-align: right;"><strong>Final Total:</strong></td>
+                    <td>{{ total_profit_cat }}</td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+
+
+    <h2>Daily Profit</h2>
+    <div class="stock">
+        <table class="table table-striped">
+            <tr>
+                <th>Date</th>
+                <th>Total Profit</th>
+            </tr>
+            {% for day in daily_profits %}
+            <tr>
+                <td>{{ day.day }}</td>
+                <td>{{ day.total_profit }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="1" style="text-align: right;"><strong>Final Total:</strong></td>
+                <td>{{ total_profit_daily }}</td>
+            </tr>
+        </table>
+    </div>
+    <h2>Weekly Profit</h2>
+    <div class="stock">
+        <table class="table table-striped">
+            <tr>
+                <th>Week</th>
+                <th>Total Profit</th>
+            </tr>
+            {% for week in weekly_profits %}
+            <tr>
+                <td>{{ week.week }}</td>
+                <td>{{ week.total_profit }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="1" style="text-align: right;"><strong>Final Total:</strong></td>
+                <td>{{ total_profit_week }}</td>
+            </tr>
+        </table>
+    </div>
+    <h2>Monthly Profit</h2>
+    <div class="stock">
+        <table class="table table-striped">
+            <tr>
+                <th>Month</th>
+                <th>Total Profit</th>
+            </tr>
+            {% for month in monthly_profits %}
+            <tr>
+                <td>{{ month.month }}</td>
+                <td>{{ month.total_profit }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+
+{% endblock %}

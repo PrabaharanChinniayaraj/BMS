@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Admin Dashboard</title>
+    <script src="https://kit.fontawesome.com/b3fd6241bd.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style4.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+
+        * {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow-x: hidden;
+        }
+        
+        .container {
+            position: relative; 
+            width: 100%;
+        }
+        
+        .navigation {
+            position: fixed;
+            width: 300px;
+            height: 100%;
+            background: dodgerblue;
+            transition: 0.5s;
+            overflow: hidden;
+        }
+        
+        .navigation.active {
+            width: 60px;
+        }
+        
+        .navigation ul {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
+        
+        .navigation ul li {
+            position: relative;
+            width: 100%;
+            list-style: none;
+        }
+        
+        .navigation ul li:hover {
+            background: #d1ec65;
+        }
+        
+        .navigation ul li:nth-child(1) {
+            margin-bottom: 20px;
+        }
+        
+        .navigation ul li:nth-child(1):hover {
+            background: transparent;
+        }
+        
+        .navigation ul li a {
+            position: relative;
+            display: block;
+            width: 100%;
+            display: flex;
+            text-decoration: none;
+            color: rgb(243, 243, 243);
+        }
+        
+        .navigation ul li a .icon {
+            position: relative;
+            display: block;
+            min-width: 60px;
+            height: 60px;
+            line-height: 60px;
+            text-align: center;
+        }
+        
+        .navigation ul li a .icon .fa {
+            color: #fff;
+            font-size: 24px;
+        } 
+        
+        .navigation ul li a .title {
+            position: relative;
+            display: block;
+            padding: 0 10px;
+            height: 60px;
+            line-height: 60px;
+            white-space: nowrap;
+        } 
+        
+        .main {
+            position: relative;
+            width: calc(100% - 300px);
+            left: 300px;
+            min-height: 100vh;
+            background: #f5f5f5;
+            transition: 0.5s;
+        }
+        
+        .main.active {
+            width: calc(100% - 60px);
+            left: 60px;
+        }
+        
+        .main .topbar {
+            width: 100%;
+            background: #fff;
+            height: 60px;
+            padding: 0 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .toggle {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            background: rgb(255, 255, 255);
+            cursor: pointer;
+        }
+        .toggle::before {
+            content: '\f0c9';
+            font-family: FontAwesome;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            line-height: 60px;
+            font-size: 24px;
+            text-align: center;
+            color: #003147;
+        }
+        .search label
+        {
+            position: relative;
+            width: 100%;
+        }
+        .search label input
+        {
+            width: 100%;
+            height:40px;
+            border-radius: 40px;
+            padding: 5px 20px;
+            padding-left: 35px;
+            outline: none;
+            border: 1px solid rgba(0,0,0,0.2);
+        
+        }
+        .search label .fa
+        {
+            position: absolute;
+            left: 15px;
+            top:4px;
+        }
+        .user{
+            position: relative;
+            min-width: 100px;
+            width: 100px;
+            height: 50px;
+            cursor: pointer;
+            
+            top: 20px;
+        }
+        .user img
+        {
+            position: absolute;
+            top:0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .cardbox
+        {
+            position:relative;
+            width:100%;
+            padding:20px;
+            display:grid;
+            grid-template-columns: repeat(4,1fr);
+            grid-gap:20px;
+        
+        }
+        .cardbox .card
+        {
+            position:relative;
+            background: #fff;
+            padding:20px;
+            display:flex;
+            justify-content: space-between;
+            cursor:pointer;
+            border-radius: px;
+            
+        
+        }
+        .cardbox .card .numbers
+        {
+            position: relative;
+            font-size: 2em;
+            font-weight: 500;
+        }
+        .cardbox .card .cardname
+        {
+           
+            color: #999;
+        }
+        .cardbox .card .iconbox
+        {
+            font-size: 2.5em;
+            color:#03a9f4;
+        }
+        .details
+        {
+            position:relative;
+            width:100%;
+            padding:20px;
+            padding-top: 0;
+            display:grid;
+            grid-gap:20px;
+            grid-template-columns: 2fr 1fr;
+        
+        }
+        .details .recentOrders
+        {
+           position: relative; 
+           display:grid;
+           min-height: 530px;
+           background: #fff;
+           padding: 20px;
+        }
+        .cardHeader
+        {
+            display:flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        
+        }
+        .cardHeader h2 {
+            font-weight: 600;
+        }
+        .btn{
+            position:relative;
+            padding :5px 10px;
+            background: #03a9f4;
+            color:#fff;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+        .details table{
+            width:100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        
+        }
+        .details table thead td
+        {
+            font-weight: 600;
+        }
+        .details .recentOrders table tr
+        {
+            border-bottom: 1px solid rgba(0, 0, 0,0.2);
+        }
+        .details .recentOrders table tbody tr:last-child{
+            border-bottom: none;
+        }
+        .details .recentOrders table tr:hover
+        {
+            background: #03a9f4;
+            color:#f2f2f2
+        }
+        .GrabhBox{
+            position: relative;
+            width:100%;
+            padding:20px;
+            display:grid;
+            grid-template-columns: 1fr 2fr;
+            grid-gap:30px;
+            min-height: 200px;
+        
+        }
+        .GrabhBox .Box{
+            position:relative;
+            background: #f9f9f7;
+            padding:20px;
+            width: 100%;
+            box-shadow: 0 7px 25px rgba(0,0,0,0.4);
+            border-radius: 20px;
+        }
+        .details .recentOrders table thead tr:hover
+        {
+            background: #5ae461;
+        }
+        .details .recentOrders table tr td
+        {
+            padding: 9px 5px;
+        }
+        .details .recentOrders table thead tr td:last-child,
+        .details .recentOrders table tbody tr td:last-child
+        {
+            text-align: right;
+        }
+        .details .recentOrders table thead tr td:nth-child(2),
+        .details .recentOrders table tbody tr td:nth-child(2)
+        {
+            text-align: right;
+            padding-right: 20px;
+        }
+        .details .recentOrders table thead tr td:nth-child(3),
+        .details .recentOrders table tbody tr td:nth-child(3)
+        {
+            text-align: center;
+            padding-right: 20px;
+        }
+        .status{
+            position:relative;
+            padding:2px 4px;
+            background: #eb44ae;
+            color: #fff;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 300;
+        }
+        .Delivered
+        {
+            background: #179706;
+        }
+        .Pending
+        {
+            background: #e8a617;
+        }
+        .InProgress
+        {
+            background: #8de02c;
+        }
+        .details .recentCustomers
+        {
+            position:relative;
+            display: grid;
+            min-height: 530px;
+            background: #fff;
+            padding: 20px;
+        }
+        .details .recentCustomers .imgBx
+        {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        .details .recentCustomers .imgBx img
+        {
+            position: absolute;
+            top: 0;
+            left:0;
+            width:100%;
+            height:100%;
+            object-fit: cover;
+        }
+        .details .recentCustomers table tr:hover
+        {
+            background: #03a9f4;
+            color:#fff
+        }
+        .details .recentCustomers table tr td
+        {
+            padding: 7px 10px;
+        
+        }
+        .details .recentCustomers table tr td h4
+        {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.2em;
+        }
+        .details .recentCustomers table tr td h4 span
+        {
+            font-size: 14px;
+            color:#999
+        }
+        .high {
+            color: green;
+            
+        }
+        .medium {
+            color: orange;
+           
+        }
+        .low {
+           color: red;
+           
+        }
+        @media (max-width:992px)
+        {
+            .navigation
+            {
+                left:-300px;
+            }
+            .navigation.active
+            {
+                left:0;
+            }
+            .main
+            {
+                width:100%;
+                Left: 0;
+            }
+            .main.active
+            {
+                width:calc(100%-300px);
+                left:300px;
+            }.cardbox
+            {
+                grid-template-columns: repeat(2,1fr);
+                grid-gap:20px;
+            }
+            .GrabhBox{
+                grid-template-columns: 1fr;
+                height:auto;
+            }
+            
+        
+        }
+        @media (max-width:768px)
+        {
+            .details
+            {
+                grid-template-columns: repeat(1,1fr);
+            }
+            .cardHeader h2
+            {
+                font-weight: 600;
+                font-size: 18px;
+            }
+        }
+        @media (max-width:480px)
+        {
+            .cardBox
+            {
+                grid-template-columns: repeat(1,1fr);
+            }
+            .details .recentOrders 
+            {
+                overflow-x: auto;
+        
+            }
+            .details .recentOrders table
+            {
+                width: 600px;
+        
+            }
+            .navigation
+            {
+                width: 100%;
+                left:-100%;
+                z-index: 1000;
+            }
+            .navigation .active
+            {
+                width:100%;
+                left: 0;
+            }
+            .toggle.active::before
+            {
+                color: #fff;
+            }
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <div class="navigation">
+        {% if request.user.is_authenticated and user.role != 'admin'   %}
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="icon"><i class="fa fa-apple"></i></span>
+                        <span class="title"><h2>Brand Name</h2></span>
+                    </a>
+                </li>
+
+              
+                <li>
+                    <a href="#">
+                        <span class="icon"><i class="fa fa-user"></i></span>
+                        <span class="title">{{ user.role }}</span>
+                    </a>
+                </li>
+              
+                <li>
+                    <a href="{% url 'Stock' %}">
+                        <span class="icon"><i class="fa fa-cubes"></i></span>
+                        <span class="title">Stock</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'Orders' %}">
+                        <span class="icon"><i class="fa fa-clipboard-list"></i></span>
+                        <span class="title">Orders</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'Message' %}">
+                        <span class="icon"><i class="fa fa-comment"></i></span>
+                        <span class="title">Message</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'Transactions' %}">
+                        <span class="icon"><i class="fa fa-money-bill"></i></span>
+                        <span class="title">Transactions</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'Buysummary' %}">
+                        <span class="icon"><i class="fa fa-shopping-bag"></i></span>
+                        <span class="title">BuyingSummary</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'Salesummary' %}">
+                        <span class="icon"><i class="fa fa-chart-line"></i></span>
+                        <span class="title">SalesSummary</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'Sellingqty' %}">
+                        <span class="icon"><i class="fa fa-boxes"></i></span>
+                        <span class="title">Quantity Of Sale</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'top-customers' %}">
+                        <span class="icon"><i class="fa fa-users"></i></span>
+                        <span class="title">Customers</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'logout' %}">
+                        <span class="icon"><i class="fa fa-sign-out"></i></span>
+                        <span class="title">Signout</span>
+                    </a>
+                </li>
+            </ul>
+        {% elif request.user.is_authenticated and user.role == 'admin' %}
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="icon"><i class="fa fa-apple"></i></span>
+                        <span class="title"><h2>Brand Name</h2></span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <span class="icon"><i class="fa fa-user"></i></span>
+                        <span class="title">{{ user.role }}</span>
+                    </a>
+                </li>
+            
+                <li>
+                    <a href="{% url 'Stock' %}">
+                        <span class="icon"><i class="fa fa-cubes"></i></span>
+                        <span class="title">Stock</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'user_register'  %}">
+                        <span class="icon"><i class="fa fa-user-plus"></i></span>
+                        <span class="title">Register</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'register'  %}">
+                        <span class="icon"><i class="fa fa-users"></i></span>
+                        <span class="title">Customer</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'Vendor_register' %}">
+                        <span class="icon"><i class="fa fa-money-bill"></i></span>
+                        <span class="title">Vendor</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'logout' %}">
+                        <span class="icon"><i class="fa fa-sign-out"></i></span>
+                        <span class="title">Signout</span>
+                    </a>
+                </li>
+            </ul>
+        {% else %}
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="icon"><i class="fa fa-apple"></i></span>
+                        <span class="title"><h2>Brand Name</h2></span>
+                    </a>
+                </li>
+            </ul>
+        {% endif %}
+            
+        </div>
+        <div class="main">
+            <div class="topbar">
+                <div class="toggle" onclick="toggleMenu();"></div>
+                <div class="search">
+                    <label>
+                        <input type="text" placeholder="Search Here">
+                        <i class="fa fa-search"></i>
+                    </label>
+                </div>
+            
+                {% if request.user.is_authenticated %}
+                    <div class="user">
+                        <h5>{{ request.user }}</h5>
+                    </div>
+                {% else %}
+                    <div class="user">
+                        <a href="{% url 'Login' %}"><h5>Login</h5></a>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="cardbox">
+                <div class="card">
+                    <div>
+                        <div class="numbers">1042</div>
+                        <div class="cardname">Daily Views</div>
+                    </div>
+                    <div class="iconbox">
+                        <i class="fa fa-eye"></i>
+                    </div>
+                </div>
+                <div class="card">
+                    <div>
+                        <div class="numbers">82</div>
+                        <div class="cardname">Sales</div>
+                    </div>
+                    <div class="iconbox">
+                        <i class="fa fa-shopping-cart"></i>
+                    </div>
+                </div>
+                <div class="card">
+                    <div>
+                        <div class="numbers">208</div>
+                        <div class="cardname">Comments</div>
+                    </div>
+                    <div class="iconbox">
+                        <i class="fa fa-comment"></i>
+                    </div>
+                </div>
+                <div class="card">
+                    <div>
+                        <div class="numbers">$2080</div>
+                        <div class="cardname">Earnings</div>
+                    </div>
+                    <div class="iconbox">
+                        <i class="fa fa-money"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="GrabhBox">
+                
+                <div class="Box"><canvas id="myChart"></canvas></div>
+                <div class="Box"><canvas id="Earnings"></canvas></div>
+            </div>
+            <div class="details">
+                <div class="recentOrders">
+                    <div class="cardHeader">
+                        <h2>Top 10 Transactions By Customer</h2>
+                        <a href="#" class="btn">View All</a>
+                    </div>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Customer Name</th>
+                                <th>Total Amount Spent</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for customer in top_customers %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td> 
+                                <td>{{ customer.customer__name }}</td>
+                                <td>${{ customer.total_amount }}</td>
+                                <td class="
+                                {% if customer.total_amount >= 2000 %}
+                                    high
+                                {% elif customer.total_amount >= 1000 %}
+                                    medium
+                                {% else %}
+                                    low
+                                {% endif %}
+                                ">
+                                {% if customer.total_amount >= 2000 %}
+                                    <i class="fa fa-arrow-up"></i> High
+                                {% elif customer.total_amount >= 1000 %}
+                                    <i class="fa fa-arrow-right"></i> Medium
+                                {% else %}
+                                    <i class="fa fa-arrow-down"></i> Low
+                                {% endif %}
+                                </td>
+                                
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="recentOrders">
+                    <div class="cardHeader">
+                        <h2>Valuable Customers</h2>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Customer Name</th>
+                                <th>Total Profit</th>
+                                <th>Ratting</th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody>
+                            {% for customer in customer_profits %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td> 
+                                    <td><h4>{{ customer.name }}</h4></td>
+                                    <td>{{ customer.total_profit }}</td>
+                                    <td>
+                                        {% if customer.total_profit >= 200 and customer.total_profit < 500 %}
+                                            <strong style="color: #ff0000;">*</strong>
+                                        {% elif customer.total_profit >= 500 and customer.total_profit < 1000 %}
+                                            <strong style="color: #ff7f00;">**</strong>
+                                        {% elif customer.total_profit >= 1000 and customer.total_profit < 2000 %}
+                                            <strong style="color: #ffff00;">***</strong>
+                                        {% elif customer.total_profit >= 2000 and customer.total_profit < 2500 %}
+                                            <strong style="color: #7fff00;">****</strong>
+                                        {% elif customer.total_profit >= 2500 and customer.total_profit < 3000 %}
+                                            <strong style="color: #00ff00;">*****</strong>
+                                        {% elif customer.total_profit >= 3000 %}
+                                            <strong style="color: #007fff;">******</strong>
+                                        {% endif %}
+                                    </td>
+                                    
+                        
+                                   
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function toggleMenu(){
+            let toggle = document.querySelector('.toggle');
+            let navigation = document.querySelector('.navigation');
+            let main = document.querySelector('.main');
+            toggle.classList.toggle('active');
+            navigation.classList.toggle('active');
+            main.classList.toggle('active');
+        }
+    </script>
+    
+
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var profitdaysJson = JSON.parse('{{profitdays_json|escapejs }}');
+            var salesTotalsJson = JSON.parse('{{ profittotals_json|escapejs }}');
+
+            new Chart(ctx, {
+                type:  'polarArea',
+                data: {
+                    labels: profitdaysJson,
+                    datasets: [{
+                        label: 'Total Profits',
+                        data: salesTotalsJson,
+                        backgroundColor: [
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(255, 159, 64, 0.8)',
+                        'rgba(255, 205, 86, 0.8)',
+                        'rgba(75, 192, 192, 0.8)',
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(153, 102, 255, 0.8)',
+                        'rgba(201, 203, 207, 0.8)'
+                        ],
+                        borderColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(255, 159, 64)',
+                        'rgb(255, 205, 86)',
+                        'rgb(75, 192, 192)',
+                        'rgb(54, 162, 235)',
+                        'rgb(153, 102, 255)',
+                        'rgb(201, 203, 207)'
+                        ],
+                        borderWidth: 2
+                            }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+      
+      
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var ctx = document.getElementById("Earnings").getContext('2d');
+            var daysJson = JSON.parse('{{ days_json|escapejs }}');
+            var salesTotalsJson = JSON.parse('{{ sales_totals_json|escapejs }}');
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: daysJson,
+                    datasets: [{
+                        label: 'Total Sales',
+                        data: salesTotalsJson,
+                        backgroundColor: [
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(255, 159, 64, 0.8)',
+                        'rgba(255, 205, 86, 0.8)',
+                        'rgba(75, 192, 192, 0.8)',
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(153, 102, 255, 0.8)',
+                        'rgba(201, 203, 207, 0.8)'
+                        ],
+                        borderColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(255, 159, 64)',
+                        'rgb(255, 205, 86)',
+                        'rgb(75, 192, 192)',
+                        'rgb(54, 162, 235)',
+                        'rgb(153, 102, 255)',
+                        'rgb(201, 203, 207)'
+                        ],
+                        borderWidth: 2
+                            }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+      
+</body>
+</html>
+
+ 

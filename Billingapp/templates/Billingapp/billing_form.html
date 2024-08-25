@@ -1,0 +1,13 @@
+
+{% load widget_tweaks %}
+
+{% block content %}
+    <h1 class ="mb-4 text-primary">Billing</h1>
+    <div id="billing-form">
+        {% include 'Billingapp/form1.html' %}
+    </div>
+   
+    <div class ="col-3">
+        <button class="btn btn-secondary" type ="submit" hx-get="{% url 'Billing' %}" hx-target="#billing-form" hx-swap="beforeend">+Add</button>
+    </div>
+{% endblock %}

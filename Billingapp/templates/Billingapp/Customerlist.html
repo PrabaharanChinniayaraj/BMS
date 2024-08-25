@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+    <h2>Register Customer</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_table }}
+        <button type="submit">Register</button>
+    </form>
+
+    <h2>Customer List</h2>
+    {% if Customers %}
+        <div class="stock">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Cell</th>
+                        <th>Email</th>
+                        <th>Billing</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for customer in Customers %}
+                    <tr>
+                        <td>{{ customer.name }}</td>
+                        <td>{{ customer.phone_number }}</td>
+                        <td>{{ customer.email }}</td>
+                        <td><a href="#">CREATE SALE</a></td>
+                        <td>
+                            <a href="{% url 'edit_customer' customer.id %}">Edit</a>
+                            <form action="{% url 'delete_customer' customer.id %}" method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>No customers found.</p>
+    {% endif %}
+{% endblock content %}

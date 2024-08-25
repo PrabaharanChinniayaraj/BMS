@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing Form</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#form-set').on('click', '.add-product', function() {
+                var form_idx = $('#id_form-TOTAL_FORMS').val();
+                var empty_form_html = $('#empty-form').html().replace(/__prefix__/g, form_idx);
+                $('#form-set').append(empty_form_html);
+                $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+            });
+        });
+    </script>
+    <style>
+        .form-group {
+            margin-bottom: .1rem; /* Reduced spacing between form groups */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ORDER</h1>
+        <div class="row">
+            <div class="form-group mb-2"class="col-md-6">
+                <label for="transcode">Transcode</label>
+                <input type="text" id="transcode" name="transcode" value="{{ transcode }}" class="form-control" readonly>
+            </div>
+            <div class="form-group mb-2"class="col-md-6">
+        
+            </div>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div id="form-set">
+                {{ formset.management_form }}
+                {% for form in formset %}
+                <div class="row">
+                    {{ form.id }}
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>{{ form.product.label_tag }}</label>
+                            {{ form.product.errors }}
+                            {% render_field form.product class="form-control" %}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>{{ form.quantity.label_tag }}</label>
+                            {{ form.quantity.errors }}
+                            {% render_field form.quantity class="form-control" %}
+                        </div>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button type="button" class="btn btn-primary add-product">Add Product</button>
+                    </div>
+                    {{ form.transcode }}
+                    {{ form.transaction_id }}
+                </div>
+                {% endfor %}
+            </div>
+            <div class="form-group text-right">
+                <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+        </form>
+
+        <div id="empty-form" style="display:none;">
+            <div class="row">
+                {{ formset.empty_form.id }}
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>{{ formset.empty_form.product.label_tag }}</label>
+                        {{ formset.empty_form.product.errors }}
+                        {% render_field formset.empty_form.product class="form-control" %}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>{{ formset.empty_form.quantity.label_tag }}</label>
+                        {{ formset.empty_form.quantity.errors }}
+                        {% render_field formset.empty_form.quantity class="form-control" %}
+                    </div>
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="button" class="btn btn-primary add-product">Add Product</button>
+                </div>
+                {{ formset.empty_form.transcode }}
+                {{ formset.empty_form.transaction_id }}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock content %}

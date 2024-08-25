@@ -1,0 +1,969 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy Pharma</title>
+
+    <!-- Bootstrap CSS -->
+   
+
+    <script src="https://kit.fontawesome.com/b3fd6241bd.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style4.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+    
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.6.0"></script>
+    <style>
+        
+        
+        .card-margin {
+            margin-bottom: 1.875rem;
+        }
+        .customer{
+          width: 500px;
+          height:300px;
+          margin-left:120px;
+          border:1px;
+          border-radius: 5px;
+          background: #93b0f3;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Adjust shadow as needed */
+
+        }
+        .customerlist {
+          width: 600px;
+          margin-left: 0px;
+          border: 1px solid #190c0c;
+          border-radius: 5px;
+          background: #d7ff67;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+          
+        }
+        .btn-secondary {
+          margin-left: 10px; /* Added margin to create space between buttons */
+        }
+        .customer1{
+          width: 500px;
+          height:100px;
+          margin-left:120px;
+          border:1px;
+          border-radius: 5px;
+          background: #5ae156;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Adjust shadow as needed */
+          align-items: center;
+          padding-top: 30px;
+          padding-left: 40px;
+        }
+        .sellqty{
+          width: 500px;
+          margin-left:120px;
+          border:1px;
+          border-radius: 5px;
+          background: #93b0f3;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Adjust shadow as needed */
+        }
+        #productChart{
+          max-width: 400px;
+          max-height: 400px;
+          margin-left: 100px;
+          
+          border:1px;
+          border-radius: 5px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Adjust shadow as needed */
+        }
+        .sellqty1{
+          width: 500px;
+          margin-left:120px;
+          border:1px;
+          border-radius: 5px;
+          background: #93b0f3;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Adjust shadow as needed */
+        }
+
+
+        .transaction{
+          width: 700px;
+          margin-left:0px;
+          border:1px;
+          border-radius: 5px;
+          background: #93b0f3;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Adjust shadow as needed */
+        }
+
+        .buysummary{
+          width: 500px;
+          margin-left:0px;
+          border:1px;
+          border-radius: 5px;
+          background: #f6c3ac;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Adjust shadow as needed */
+          color: #530910;
+          max-height: 450px;
+          overflow-y:scroll;
+        }
+
+        .salesummary{
+          width: 700px;
+          margin-left:80px;
+          border:1px;
+          border-radius: 5px;
+          background: #f6c3ac;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Adjust shadow as needed */
+          color: #530910;
+          max-height: 450px;
+          overflow-y:scroll;
+        }
+        .Transaction{
+          width: 1000px;
+          margin-top:30px;
+          margin-left:80px;
+          border:1px;
+          border-radius: 5px;
+          background: #1ee94d;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Adjust shadow as needed */
+          color: #530910;
+          height: 450px;
+          overflow: auto;
+          text-align: center;
+        }
+        .Transaction1{
+          width: 1000px;
+          height:100px;
+          margin-left:80px;
+          margin-top: 10px;
+          border:1px;
+          border-radius: 5px;
+          background: #9da1a0;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Adjust shadow as needed */
+          align-items: center;
+          padding-left:200px;
+          padding-top: 30px;
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+
+        * {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow-x: hidden;
+        }
+        
+        .container {
+            position: relative; 
+            width: 100%;
+        }
+        
+        .navigation {
+            position: fixed;
+            width: 300px;
+            height: 100%;
+            background: dodgerblue;
+            transition: 0.5s;
+            overflow: hidden;
+        }
+        
+        .navigation.active {
+            width: 60px;
+        }
+        
+        .navigation ul {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
+        
+        .navigation ul li {
+            position: relative;
+            width: 100%;
+            list-style: none;
+        }
+        
+        .navigation ul li:hover {
+            background: #d1ec65;
+        }
+        
+        .navigation ul li:nth-child(1) {
+            margin-bottom: 20px;
+        }
+        
+        .navigation ul li:nth-child(1):hover {
+            background: transparent;
+        }
+        
+        .navigation ul li a {
+            position: relative;
+            display: block;
+            width: 100%;
+            display: flex;
+            text-decoration: none;
+            color: rgb(243, 243, 243);
+        }
+        
+        .navigation ul li a .icon {
+            position: relative;
+            display: block;
+            min-width: 60px;
+            height: 60px;
+            line-height: 60px;
+            text-align: center;
+        }
+        
+        .navigation ul li a .icon .fa {
+            color: #fff;
+            font-size: 24px;
+        } 
+        
+        .navigation ul li a .title {
+            position: relative;
+            display: block;
+            padding: 0 10px;
+            height: 60px;
+            line-height: 60px;
+            white-space: nowrap;
+        } 
+        
+        .main {
+            position: relative;
+            width: calc(100% - 300px);
+            left: 300px;
+            min-height: 100vh;
+            background: #f5f5f5;
+            transition: 0.5s;
+        }
+        
+        .main.active {
+            width: calc(100% - 60px);
+            left: 60px;
+        }
+        
+        .main .topbar {
+            width: 100%;
+            background: #fff;
+            height: 60px;
+            padding: 0 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .toggle {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            background: rgb(255, 255, 255);
+            cursor: pointer;
+        }
+        .toggle::before {
+            content: '\f0c9';
+            font-family: FontAwesome;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            line-height: 60px;
+            font-size: 24px;
+            text-align: center;
+            color: #003147;
+        }
+        .search label
+        {
+            position: relative;
+            width: 100%;
+        }
+        .search label input
+        {
+            width: 100%;
+            height:40px;
+            border-radius: 40px;
+            padding: 5px 20px;
+            padding-left: 35px;
+            outline: none;
+            border: 1px solid rgba(0,0,0,0.2);
+        
+        }
+        .search label .fa
+        {
+            position: absolute;
+            left: 15px;
+            top:4px;
+        }
+        .user{
+            position: relative;
+            min-width: 100px;
+            width: 100px;
+            height: 50px;
+            cursor: pointer;
+            
+            top: 20px;
+        }
+        .user img
+        {
+            position: absolute;
+            top:0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .cardbox
+        {
+            position:relative;
+            width:100%;
+            padding:20px;
+            display:grid;
+            grid-template-columns: repeat(4,1fr);
+            grid-gap:20px;
+        
+        }
+        .cardbox .card
+        {
+            position:relative;
+            background: #fff;
+            padding:20px;
+            display:flex;
+            justify-content: space-between;
+            cursor:pointer;
+            border-radius: px;
+            
+        
+        }
+        .cardbox .card .numbers
+        {
+            position: relative;
+            font-size: 2em;
+            font-weight: 500;
+        }
+        .cardbox .card .cardname
+        {
+           
+            color: #999;
+        }
+        .cardbox .card .iconbox
+        {
+            font-size: 2.5em;
+            color:#03a9f4;
+        }
+        .details
+        {
+            position:relative;
+            width:100%;
+            padding:20px;
+            padding-top: 0;
+            display:grid;
+            grid-gap:20px;
+            grid-template-columns: 2fr 1fr;
+        
+        }
+        .details .recentOrders
+        {
+           position: relative; 
+           display:grid;
+           min-height: 530px;
+           background: #fff;
+           padding: 20px;
+        }
+        .cardHeader
+        {
+            display:flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        
+        }
+        .cardHeader h2 {
+            font-weight: 600;
+        }
+        .btn{
+            position:relative;
+            padding :5px 10px;
+            background: #03a9f4;
+            color:#fff;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+        .details table{
+            width:100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        
+        }
+        .details table thead td
+        {
+            font-weight: 600;
+        }
+        .details .recentOrders table tr
+        {
+            border-bottom: 1px solid rgba(0, 0, 0,0.2);
+        }
+        .details .recentOrders table tbody tr:last-child{
+            border-bottom: none;
+        }
+        .details .recentOrders table tr:hover
+        {
+            background: #03a9f4;
+            color:#f2f2f2
+        }
+        .GrabhBox{
+            position: relative;
+            width:100%;
+            padding:20px;
+            display:grid;
+            grid-template-columns: 1fr 2fr;
+            grid-gap:30px;
+            min-height: 200px;
+        
+        }
+        .GrabhBox .Box{
+            position:relative;
+            background: #f9f9f7;
+            padding:20px;
+            width: 100%;
+            box-shadow: 0 7px 25px rgba(0,0,0,0.4);
+            border-radius: 20px;
+        }
+        .details .recentOrders table thead tr:hover
+        {
+            background: #5ae461;
+        }
+        .details .recentOrders table tr td
+        {
+            padding: 9px 5px;
+        }
+        .details .recentOrders table thead tr td:last-child,
+        .details .recentOrders table tbody tr td:last-child
+        {
+            text-align: right;
+        }
+        .details .recentOrders table thead tr td:nth-child(2),
+        .details .recentOrders table tbody tr td:nth-child(2)
+        {
+            text-align: right;
+            padding-right: 20px;
+        }
+        .details .recentOrders table thead tr td:nth-child(3),
+        .details .recentOrders table tbody tr td:nth-child(3)
+        {
+            text-align: center;
+            padding-right: 20px;
+        }
+        .status{
+            position:relative;
+            padding:2px 4px;
+            background: #eb44ae;
+            color: #fff;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 300;
+        }
+        .Delivered
+        {
+            background: #179706;
+        }
+        .Pending
+        {
+            background: #e8a617;
+        }
+        .InProgress
+        {
+            background: #8de02c;
+        }
+        .details .recentCustomers
+        {
+            position:relative;
+            display: grid;
+            min-height: 530px;
+            background: #fff;
+            padding: 20px;
+        }
+        .details .recentCustomers .imgBx
+        {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        .details .recentCustomers .imgBx img
+        {
+            position: absolute;
+            top: 0;
+            left:0;
+            width:100%;
+            height:100%;
+            object-fit: cover;
+        }
+        .details .recentCustomers table tr:hover
+        {
+            background: #03a9f4;
+            color:#fff
+        }
+        .details .recentCustomers table tr td
+        {
+            padding: 7px 10px;
+        
+        }
+        .details .recentCustomers table tr td h4
+        {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.2em;
+        }
+        .details .recentCustomers table tr td h4 span
+        {
+            font-size: 14px;
+            color:#999
+        }
+        .customer1 {
+          background-color: #fff;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          margin: 20px auto;
+          width: 90%;
+          max-width: 600px;
+      }
+
+      .customer1 form {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: space-between;
+      }
+
+      .customer1 .form-group {
+          display: flex;
+          flex-direction: column;
+          margin-bottom: 15px;
+      }
+
+      .customer1 .form-group label {
+          margin-bottom: 5px;
+      }
+
+      .customer1 .form-control {
+          width: 100%;
+          padding: 10px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          transition: all 0.3s ease;
+      }
+
+      .customer1 .form-control:focus {
+          border-color: #007bff;
+          box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+      }
+
+      .customer1 .btn {
+          padding: 10px 20px;
+          border-radius: 4px;
+          text-transform: uppercase;
+          font-weight: 600;
+          transition: all 0.3s ease;
+          cursor: pointer;
+      }
+
+      .customer1 .btn-primary {
+          background-color: #007bff;
+          border: none;
+          color: #fff;
+      }
+
+      .customer1 .btn-primary:hover {
+          background-color: #0056b3;
+      }
+
+      .customer1 .btn-secondary {
+          background-color: #6c757d;
+          border: none;
+          color: #fff;
+      }
+
+      .customer1 .btn-secondary:hover {
+          background-color: #5a6268;
+      }
+      .customer2 {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin: 20px auto;
+        width: 90%;
+        max-width: 1000px;
+    }
+
+    .customer2 form {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .customer2 .form-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 15px;
+    }
+
+    .customer2 .form-group label {
+        margin-bottom: 5px;
+    }
+
+    .customer2 .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+    }
+
+    .customer2 .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    .customer2 .btn {
+        padding: 10px 20px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .customer2 .btn-primary {
+        background-color: #007bff;
+        border: none;
+        color: #fff;
+    }
+
+    .customer2 .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .customer2 .btn-secondary {
+        background-color: #6c757d;
+        border: none;
+        color: #fff;
+    }
+
+    .customer2 .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+    .stock {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin: 20px auto;
+        width: 90%;
+        max-width: 1000px;
+    }
+
+    .stock table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+        margin-bottom: 1rem;
+        color: #212529;
+    }
+
+    .stock table thead th {
+        background-color: #007bff;
+        color: #fff;
+        text-align: left;
+        padding: 10px;
+        border-top: none;
+        border-bottom: none;
+        border-radius: 5px 5px 0 0;
+    }
+
+    .stock table tbody td {
+        background-color: #f8f9fa;
+        padding: 10px;
+        border-top: none;
+        border-bottom: none;
+    }
+
+    .stock table tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    .stock table tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+        @media (max-width:992px)
+        {
+            .navigation
+            {
+                left:-300px;
+            }
+            .navigation.active
+            {
+                left:0;
+            }
+            .main
+            {
+                width:100%;
+                Left: 0;
+            }
+            .main.active
+            {
+                width:calc(100%-300px);
+                left:300px;
+            }.cardbox
+            {
+                grid-template-columns: repeat(2,1fr);
+                grid-gap:20px;
+            }
+            .GrabhBox{
+                grid-template-columns: 1fr;
+                height:auto;
+            }
+            
+        
+        }
+        @media (max-width:768px)
+        {
+            .details
+            {
+                grid-template-columns: repeat(1,1fr);
+            }
+            .cardHeader h2
+            {
+                font-weight: 600;
+                font-size: 18px;
+            }
+        }
+        @media (max-width:480px)
+        {
+            .cardBox
+            {
+                grid-template-columns: repeat(1,1fr);
+            }
+            .details .recentOrders 
+            {
+                overflow-x: auto;
+        
+            }
+            .details .recentOrders table
+            {
+                width: 600px;
+        
+            }
+            .navigation
+            {
+                width: 100%;
+                left:-100%;
+                z-index: 1000;
+            }
+            .navigation .active
+            {
+                width:100%;
+                left: 0;
+            }
+            .toggle.active::before
+            {
+                color: #fff;
+            }
+        }
+    </style>
+</head>
+<body  hx-headers='{ "X-CSRFToken": "{{ csrf_token }}" }'>
+  
+
+   
+  <div class="container">
+      <div class="navigation">
+      {% if request.user.is_authenticated and user.role != 'admin'   %}
+          <ul>
+              <li>
+                  <a href="#">
+                      <span class="icon"><i class="fa fa-apple"></i></span>
+                      <span class="title"><h2>Brand Name</h2></span>
+                  </a>
+              </li>
+
+              <li>
+                    <a href="#">
+                        <span class="icon"><i class="fa fa-user"></i></span>
+                        <span class="title">{{ user.role }}</span>
+                    </a>
+             </li>
+              <li>
+                <a href="{% url 'home' %}">
+                    <span class="icon"><i class="fa fa-home"></i></span>
+                    <span class="title">Home</span>
+                </a>
+              </li>
+            
+              <li>
+                  <a href="{% url 'Stock' %}">
+                      <span class="icon"><i class="fa fa-cubes"></i></span>
+                      <span class="title">Stock</span>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'Orders' %}">
+                      <span class="icon"><i class="fa fa-clipboard-list"></i></span>
+                      <span class="title">Orders</span>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'Message' %}">
+                      <span class="icon"><i class="fa fa-comment"></i></span>
+                      <span class="title">Message</span>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'Transactions' %}">
+                      <span class="icon"><i class="fa fa-money-bill"></i></span>
+                      <span class="title">Transactions</span>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'Buysummary' %}">
+                      <span class="icon"><i class="fa fa-shopping-bag"></i></span>
+                      <span class="title">BuyingSummary</span>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'Salesummary' %}">
+                      <span class="icon"><i class="fa fa-chart-line"></i></span>
+                      <span class="title">SalesSummary</span>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'Sellingqty' %}">
+                      <span class="icon"><i class="fa fa-boxes"></i></span>
+                      <span class="title">Quantity Of Sale</span>
+                  </a>
+              </li>
+               <li>
+                  <a href="{% url 'profit-report' %}">
+                      <span class="icon"><i class="fa fa-boxes"></i></span>
+                      <span class="title">Profit</span>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'top-customers' %}">
+                      <span class="icon"><i class="fa fa-users"></i></span>
+                      <span class="title">Customers</span>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'logout' %}">
+                      <span class="icon"><i class="fa fa-sign-out"></i></span>
+                      <span class="title">Signout</span>
+                  </a>
+              </li>
+          </ul>
+      {% elif request.user.is_authenticated and user.role == 'admin' %}
+          <ul>
+              <li>
+                  <a href="#">
+                      <span class="icon"><i class="fa fa-apple"></i></span>
+                      <span class="title"><h2>Brand Name</h2></span>
+                  </a>
+              </li>
+
+              <li>
+                    <a href="#">
+                        <span class="icon"><i class="fa fa-user"></i></span>
+                        <span class="title">{{ user.role }}</span>
+                    </a>
+              </li>
+          
+              <li>
+                  <a href="{% url 'Stock' %}">
+                      <span class="icon"><i class="fa fa-cubes"></i></span>
+                      <span class="title">Stock</span>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'user_register'  %}">
+                      <span class="icon"><i class="fa fa-user-plus"></i></span>
+                      <span class="title">Register</span>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'register'  %}">
+                      <span class="icon"><i class="fa fa-users"></i></span>
+                      <span class="title">Customer</span>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'Vendor_register' %}">
+                      <span class="icon"><i class="fa fa-money-bill"></i></span>
+                      <span class="title">Vendor</span>
+                  </a>
+              </li>
+              <li>
+                  <a href="{% url 'logout' %}">
+                      <span class="icon"><i class="fa fa-sign-out"></i></span>
+                      <span class="title">Signout</span>
+                  </a>
+              </li>
+          </ul>
+      {% else %}
+          <ul>
+              <li>
+                  <a href="#">
+                      <span class="icon"><i class="fa fa-apple"></i></span>
+                      <span class="title"><h2>Brand Name</h2></span>
+                  </a>
+              </li>
+          </ul>
+      {% endif %}
+          
+      </div>
+      <div class="main">
+          <div class="topbar">
+              <div class="toggle" onclick="toggleMenu();"></div>
+              <div class="search">
+                  <label>
+                      <input type="text" placeholder="Search Here">
+                      <i class="fa fa-search"></i>
+                  </label>
+              </div>
+          
+              {% if request.user.is_authenticated %}
+                  <div class="user">
+
+                      <h5>{{ request.user }}</h5>
+                  </div>
+              {% else %}
+                  <div class="user">
+                      <a href="{% url 'Login' %}"><h5>Login</h5></a>
+                  </div>
+              {% endif %}
+          </div>
+        
+          <script>
+            function toggleMenu(){
+                let toggle = document.querySelector('.toggle');
+                let navigation = document.querySelector('.navigation');
+                let main = document.querySelector('.main');
+                toggle.classList.toggle('active');
+                navigation.classList.toggle('active');
+                main.classList.toggle('active');
+            }
+          </script>   
+    <div class="container mt-4">
+      {% block content %}
+      {% endblock %}
+    </div>
+    

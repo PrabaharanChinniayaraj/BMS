@@ -1,0 +1,30 @@
+{% if customers %}
+    {% csrf_token %}
+    <div class="stock">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Cell</th>
+                    <th>Email</th>
+                    <th>Billing</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for customer in customers %}
+                <tr>
+                
+                    <td>{{ customer.name }}</td>
+                    <td>{{ customer.phone_number }}</td>
+                    <td>{{ customer.email }}</td>
+                    <td><a href="{% url 'bview' customer.pk %}" class="btn "> sale</a></td>
+                    
+                    
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <p></p>
+{% endif %}

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+<h1>welcome</h1>
+{% block content %}
+    {% if sales %}
+        {% csrf_token %}
+        <h1>{{ vendor }}</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>SNO</th>
+                    <th>Product</th>
+                    <th>QTY</th>
+                    <th>Price/Unit</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sale in sales %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td> 
+                        <td>{{ sale.product }}</td>
+                        <td>{{ sale.quantity }}</td>
+                        <td>{{ sale.product.buying_price }}</td>
+                        <td>{{ sale.total_price }}</td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="4"><strong>Total Price:</strong></td>
+                    <td>{{ TotalPrice }}</td>
+                </tr>
+            </tbody>
+        </table>
+    {% else %}
+        <p>No sales found.</p>
+    {% endif %}
+{% endblock %}
+

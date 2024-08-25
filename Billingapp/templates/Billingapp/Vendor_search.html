@@ -1,0 +1,22 @@
+
+
+<div class="d-flex justify-content-end mb-4">
+    <input type="text"
+        hx-post="{% url 'search_vendor' %}" 
+        hx-target="#Vendors"
+        hx-trigger="keyup changed delay:500ms"
+        name="name"  
+        class="form-control-sm mr-2" 
+        placeholder="Search by Name" 
+        hx-headers='{ "X-CSRFToken": "{{ csrf_token }}" }' />
+    
+    <input type="text"
+        hx-post="{% url 'search_vendor' %}" 
+        hx-target="#Vendors"
+        hx-trigger="keyup changed delay:500ms"
+        name="phone_number"  
+        class="form-control-sm mr-2" 
+        placeholder="Search by Cell" 
+        hx-headers='{ "X-CSRFToken": "{{ csrf_token }}" }' />
+</div>
+<div id="Vendors"></div>

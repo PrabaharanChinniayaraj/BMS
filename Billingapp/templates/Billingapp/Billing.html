@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing Form</title>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#form-set').on('click', '.add-product', function() {
+                var form_idx = $('#id_form-TOTAL_FORMS').val();
+                var empty_form_html = $('#empty-form').html().replace(/__prefix__/g, form_idx);
+                $('#form-set').append(empty_form_html);
+                $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+            });
+        });
+    </script>
+    <style>
+        .form-group {
+            margin-bottom: 10px; /* Reduced spacing between form groups */
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+            font-size: 0.9rem; /* Reduced font size */
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 5px; /* Reduced padding */
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem; /* Reduced font size */
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 3px rgba(0, 123, 255, 0.5); /* Reduced box shadow */
+        }
+
+        .btn {
+            padding: 5px 10px; /* Reduced padding */
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            color: #fff;
+            font-size: 0.9rem; /* Reduced font size */
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px; /* Reduced gap */
+            margin-bottom: 10px; /* Reduced margin */
+        }
+
+        .col-md-4 {
+            flex: 1;
+            min-width: calc(33.333% - 10px); /* Adjusted for reduced gap */
+        }
+
+        .d-flex {
+            display: flex;
+        }
+
+        .align-items-end {
+            align-items: flex-end;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .container3 {
+            max-width: 900px; /* Optional: limit container width */
+            margin: auto;
+            padding: 10px; /* Reduced padding */
+        }
+
+        h1 {
+            font-size: 1.5rem; /* Reduced font size */
+            margin-bottom: 20px; /* Reduced margin */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container3">
+<h1>ORDER</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        <div id="form-set">
+            {{ formset.management_form }}
+            {% for form in formset %}
+            <div class="row">
+                {{ form.id }}
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {% if forloop.first %}
+                            <label>{{ form.product.label_tag }}</label>
+                        {% endif %}
+                        {{ form.product.errors }}
+                        {% render_field form.product class="form-control" %}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {% if forloop.first %}
+                            <label>{{ form.quantity.label_tag }}</label>
+                        {% endif %}
+                        {{ form.quantity.errors }}
+                        {% render_field form.quantity class="form-control" %}
+                    </div>
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="button" class="btn btn-primary add-product">Add Product</button>
+                </div>
+                
+                {{ form.transcode }}
+                {{ form.transaction_id }}
+                
+            </div>
+            {% endfor %}
+        </div>
+       
+        <div class="form-group text-right">
+            <button type="submit" class="btn btn-success">Submit</button>
+        </div>
+    </form>
+
+    <div id="empty-form" style="display:none;">
+        <div class="row">
+            {{ formset.empty_form.id }}
+            <div class="col-md-4">
+                <div class="form-group">
+                    
+                    {{ formset.empty_form.product.errors }}
+                    {% render_field formset.empty_form.product class="form-control" %}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                  
+                    {{ formset.empty_form.quantity.errors }}
+                    {% render_field formset.empty_form.quantity class="form-control" %}
+                </div>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="button" class="btn btn-primary add-product"hx-get="{% url 'get_product_price' %}" 
+                hx-target="#price-display-{{ forloop.counter0 }}" 
+                hx-swap="outerHTML" 
+                hx-trigger="change" 
+                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>Add Product</button>
+            </div>
+            {{ formset.empty_form.transcode }}
+            {{ formset.empty_form.transaction_id }}
+        </div>
+    </div>
+</div>
+ {% if sales %}
+        {% csrf_token %}
+        <h1>{{ customer }}</h1>
+    <div class="stock">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>SNO</th>
+                    <th>Product</th>
+                    <th>QTY</th>
+                    <th>Price/Unit</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sale in sales %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td> 
+                        <td>{{ sale.product }}</td>
+                        <td>{{ sale.quantity }}</td>
+                        <td>{{ sale.product.price }}</td>
+                        <td>{{ sale.total_price }}</td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="4"><strong>Total Price:</strong></td>
+                    <td>{{ TotalPrice }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p>No sales found.</p>
+    {% endif %}
+
+</body>
+
+{% endblock content %}

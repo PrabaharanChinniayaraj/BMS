@@ -1,0 +1,75 @@
+Date: 5/6/2024
+Time: 18:55
+Phone Number: +91 94868 96046
+Message: This is the test message which is created by using django App to test the Whatsapp connection
+--------------------
+Date: 5/6/2024
+Time: 19:14
+Phone Number: +91 94868 96046
+Message: WhatsApp Test Message from django
+--------------------
+Date: 5/6/2024
+Time: 19:16
+Phone Number: +91 6380650483
+Message: WhatsApp Test Message from django
+--------------------
+Date: 5/6/2024
+Time: 19:18
+Phone Number: +91 94868 96046
+Message: WhatsApp Test Message from django
+--------------------
+Date: 5/6/2024
+Time: 19:21
+Phone Number: +91 9994612323
+Message: WhatsApp Test Message from django
+--------------------
+Date: 5/6/2024
+Time: 19:22
+Phone Number: +91 9943412323
+Message: WhatsApp Test Message from django
+--------------------
+Date: 19/8/2024
+Time: 22:45
+Phone Number: +9108248526315
+Message: ccx
+--------------------
+Date: 19/8/2024
+Time: 22:47
+Phone Number: +919884989762
+Message: test message from app
+--------------------
+Date: 20/8/2024
+Time: 19:56
+Phone Number: +919994612323
+Message: TEST MESSAGE
+--------------------
+Date: 20/8/2024
+Time: 19:57
+Phone Number: +919994612323
+Message: TEST MESSAGE1
+--------------------
+Date: 20/8/2024
+Time: 19:58
+Phone Number: +919994612323
+Message: TEST MESSAGE2
+--------------------
+Date: 23/8/2024
+Time: 22:46
+Phone Number: +9123423452
+Message: test message from medical app
+--------------------
+Date: 23/8/2024
+Time: 22:49
+Phone Number: +9123423452
+Message: test message from medical app
+--------------------
+Date: 23/8/2024
+Time: 22:52
+Phone Number: +919486896046
+Message: Hi
+--------------------
+Date: 23/8/2024
+Time: 22:53
+Phone Number: +919486896046
+Message: Hi message from app
+--------------------

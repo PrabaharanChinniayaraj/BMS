@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Order Form</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://unpkg.com/htmx.org@1.6.1"></script>
+    <style>
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-control {
+            margin-bottom: 10px;
+        }
+        .total-price-container {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <form id="order-form">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Price per Unit</th>
+                    <th scope="col">Quantity</th>
+               
+                    <th scope="col">Total Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <select class="form-control"
+                                hx-get="{% url 'get_product_price' %}"
+                                hx-target="#price-display"
+                                hx-swap="outerHTML"
+                                hx-trigger="change"
+                                name="product"
+                                id="product_name"
+                                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+                            <option value="">Select a Product</option>
+                            {% for product in product_names %}
+                                <option value="{{ product }}">{{ product }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <span id="price-display" data-price="0.00">
+                            0.00
+                        </span>
+                    </td>
+                    <td>
+                        <input id="quantity" name="quantity" class="form-control" type="number" min="1" max="100" step="1" hx-post="{% url 'calculate_total_price' %}" hx-target="#total-price-container" hx-swap="outerHTML" hx-trigger="change">
+                    </td>
+               
+                   
+                
+               
+                    <td class="text-right">
+                        <div id="total-price-container" class="total-price-container">
+                            Total Price: 0.00
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Include CSRF token in HTMX requests
+        document.addEventListener('htmx:configRequest', function(event) {
+            event.detail.headers['X-CSRFToken'] = "{{ csrf_token }}";
+        });
+
+        // Handle HTMX response after data update
+        document.addEventListener('htmx:afterOnLoad', function(event) {
+            if (event.detail.target.id === 'price-display') {
+                try {
+                    const response = event.detail.xhr.responseText;
+                    const priceData = JSON.parse(response);
+                    const priceDisplay = document.querySelector('#price-display');
+                    if (priceDisplay) {
+                        priceDisplay.innerHTML = priceData.price;
+                        priceDisplay.setAttribute('data-price', priceData.price); // Store the price for calculations
+                    } else {
+                        console.log('Price display element not found after HTMX response');
+                    }
+                } catch (error) {
+                    console.error('Error parsing price data:', error);
+                }
+            }
+        });
+
+        // Handle quantity input change
+        document.addEventListener('input', function(event) {
+            if (event.target && event.target.id === 'quantity') {
+                const quantity = parseFloat(event.target.value);
+                const priceDisplay = document.querySelector('#price-display');
+                const productSelect = document.querySelector('#product_name');
+                const product = productSelect ? productSelect.value : '';
+
+                if (product && priceDisplay) {
+                    const pricePerUnit = parseFloat(priceDisplay.getAttribute('data-price'));
+                    const totalPrice = quantity * pricePerUnit;
+                    const totalPriceDisplay = document.querySelector('#total-price-container');
+                    if (totalPriceDisplay) {
+                        totalPriceDisplay.innerHTML = 'Total Price: ' + (isNaN(totalPrice) ? '0.00' : totalPrice.toFixed(2));
+                    } else {
+                        console.log('Total price display element not found');
+                    }
+
+                    // Send HTMX request to calculate total price on the server
+                    htmx.ajax('POST', '{% url "calculate_total_price" %}', {
+                        target: '#total-price-container',
+                        headers: {
+                            'X-CSRFToken': "{{ csrf_token }}"
+                        },
+                        values: {
+                            product: product,
+                            quantity: quantity
+                        }
+                    });
+                } else {
+                    console.log('Product or price display element not found');
+                }
+            }
+        });
+
+        // Handle product selection change
+        document.addEventListener('change', function(event) {
+            if (event.target && event.target.id === 'product_name') {
+                const product = event.target.value;
+                htmx.ajax('GET', `{% url 'get_product_price' %}?product=${product}`, {
+                    target: '#price-display',
+                    swap: 'outerHTML',
+                    headers: {
+                        'X-CSRFToken': "{{ csrf_token }}"
+                    }
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

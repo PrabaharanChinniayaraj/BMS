@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing Form</title>
+    <script>
+        let cumulativeTotal = 0;
+
+        function updatePrice() {
+            const productSelect = document.getElementById('product');
+            const priceDisplay = document.getElementById('price');
+            const productId = productSelect.value;
+
+            fetch(`/get-product-price/?product_id=${productId}`)
+                .then(response => response.json())
+                .then(data => {
+                    priceDisplay.value = data.price || 'N/A';
+                });
+        }
+
+        function addItem() {
+            const productSelect = document.getElementById('product');
+            const priceDisplay = document.getElementById('price');
+            const quantityInput = document.getElementById('quantity');
+            const productTable = document.getElementById('productTable').getElementsByTagName('tbody')[0];
+
+            const productName = productSelect.options[productSelect.selectedIndex].text;
+            const productId = productSelect.value;
+            const price = parseFloat(priceDisplay.value);
+            const quantity = parseInt(quantityInput.value);
+            const totalPrice = price * quantity;
+
+            const newRow = productTable.insertRow();
+            const rowId = 'row-' + new Date().getTime(); // Unique ID for each row
+
+            newRow.id = rowId;
+            newRow.dataset.productId = productId;
+            newRow.insertCell(0).textContent = productName;
+            newRow.insertCell(1).textContent = price.toFixed(2);
+            newRow.insertCell(2).textContent = quantity;
+            newRow.insertCell(3).textContent = totalPrice.toFixed(2);
+            const actionsCell = newRow.insertCell(4);
+            actionsCell.innerHTML = `
+                <button type="button" onclick="editItem('${rowId}')">Edit</button>
+                <button type="button" onclick="deleteItem('${rowId}')">Delete</button>
+            `;
+
+            cumulativeTotal += totalPrice;
+            document.getElementById('cumulativeTotal').textContent = cumulativeTotal.toFixed(2);
+
+            productSelect.value = '';
+            priceDisplay.value = '';
+            quantityInput.value = '';
+        }
+
+        function editItem(rowId) {
+            const row = document.getElementById(rowId);
+            const cells = row.getElementsByTagName('td');
+
+            const productName = cells[0].textContent;
+            const price = cells[1].textContent;
+            const quantity = cells[2].textContent;
+
+            document.getElementById('product').value = productName;
+            document.getElementById('price').value = price;
+            document.getElementById('quantity').value = quantity;
+
+            deleteItem(rowId);
+        }
+
+        function deleteItem(rowId) {
+            const row = document.getElementById(rowId);
+            const cells = row.getElementsByTagName('td');
+            const totalPrice = parseFloat(cells[3].textContent);
+
+            cumulativeTotal -= totalPrice;
+            document.getElementById('cumulativeTotal').textContent = cumulativeTotal.toFixed(2);
+
+            row.remove();
+        }
+
+        function gatherTransactionData() {
+            const productTable = document.getElementById('productTable').getElementsByTagName('tbody')[0];
+            const rows = productTable.getElementsByTagName('tr');
+            const transactionData = [];
+
+            for (let row of rows) {
+                const productId = row.dataset.productId;
+                const quantity = row.getElementsByTagName('td')[2].textContent;
+
+                transactionData.push({
+                    product_id: productId,
+                    quantity: quantity
+                });
+            }
+
+            document.getElementById('transactionData').value = JSON.stringify(transactionData);
+        }
+    </script>
+</head>
+<body>
+    
+    <div class="stock">
+        <table id="productTable">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total Price</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3"><strong>Cumulative Total:</strong></td>
+                    <td id="cumulativeTotal">0.00</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div class="customer2">
+        <form method="post" action="{% url 'salesf' customer.id %}" class="form-inline mb-3" onsubmit="gatherTransactionData()">
+            {% csrf_token %}
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="product">Product:</label>
+                <select id="product" name="product" onchange="updatePrice()">
+                    <option value="">Select Product</option>
+                    {% for product in products %}
+                        <option value="{{ product.id }}">{{ product.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="price">Price:</label>
+                <input type="text" id="price" name="price" readonly>
+            </div>
+
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" name="quantity" min="1">
+            </div>
+
+            <button type="button" onclick="addItem()">Add</button>
+
+            <input type="hidden" id="transactionData" name="transactionData">
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+</html>
+{% endblock content %}

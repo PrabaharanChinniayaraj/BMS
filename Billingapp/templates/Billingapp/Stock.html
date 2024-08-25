@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+
+    {% if Stocks %}
+        {% csrf_token %}
+        <h1>Stock Details</h1>
+
+        <div class="customer1">
+            <form method="get">
+                <div class="form-group">
+                    <label for="product_name" class="sr-only">Product Name</label>
+                    <select class="form-control" id="product_name" name="product_name">
+                        <option value="">Select Product</option>
+                        {% for product__name in product_names %}
+                            <option value="{{ product__name }}">{{ product__name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Filter</button>
+                <a href="{% url 'Stock' %}" class="btn btn-secondary">Reset</a>
+            </form>
+        </div>
+    
+        <div class="stock">
+            <table>
+                <thead>
+                    <tr>
+                        <th>SNO</th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>QTY</th>
+                        <th>ROL</th>
+                        <th>STATUS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stock in Stocks %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ stock.name }}</td>
+                            <td>{{ stock.price }}</td>
+                            <td>{{ stock.quantity_on_hand }}</td>
+                            <td>{{ stock.reorder_level }}</td>
+                            <td style="text-align: center;">
+                                {% if stock.quantity_on_hand <= stock.reorder_level %}
+                                    <div style="background-color: red; padding: 5px; border-radius: 5px;">
+                                        <span style="color: white;">{{ stock.quantity_on_hand }} <i class="fas fa-arrow-down"></i></span>
+                                    </div>
+                                {% else %}
+                                    <div style="background-color: green; padding: 5px; border-radius: 5px;">
+                                        <span style="color: white;">{{ stock.quantity_on_hand}} <i class="fas fa-arrow-up"></i></span>
+                                    </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+   
+    
+    {% else %}
+        <p>No sales found.</p>
+    
+    {% endif %}
+{% endblock %}
+
