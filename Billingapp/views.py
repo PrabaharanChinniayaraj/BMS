@@ -16,7 +16,7 @@ from django.contrib import messages
 from django.utils.timezone import make_aware
 from django.db.models import Sum, F
 from datetime import datetime
-import pywhatkit as kit
+# import pywhatkit as kit
 import json
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
