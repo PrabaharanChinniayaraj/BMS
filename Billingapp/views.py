@@ -31,6 +31,10 @@ from io import BytesIO
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
+import os
+if os.environ.get('DISPLAY'):
+    import pywhatkit as kit
+
 
 def generate_unique_transaction_id(name,mobile):
     prefix = name 
